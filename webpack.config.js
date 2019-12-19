@@ -27,8 +27,8 @@ module.exports = {
         use: ['style-loader','css-loader','sass-loader']
       },
       {
-        test: /\.jpg|png|gif|bmp|jepg$/,
-        use: 'url-loader?limit=7632&name=[hash:8]-[name].[ext]'
+        test: /\.jpg|gif|png|bmp|jepg$/,
+        use: 'url-loader?limit=1024&name=[hash:8]-[name].[ext]'
         //limit的值是图片的大小,如果大于等于这个值就不会转换为base64
       },
       {

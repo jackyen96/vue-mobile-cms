@@ -1,15 +1,28 @@
 //入口文件
 import Vue from 'vue'
 import App from './App.vue'
-console.log('ok')
+import VueRouter from 'vue-router'
 
 //按需导入mint ui
-import { Header} from 'mint-ui'
+import { Header, Swipe, SwipeItem } from 'mint-ui'
+import router from './router'
+import VueResource from 'vue-resource'
 import 'mint-ui/lib/style.css'
 import './lib/mui/sass/mui.scss'
-Vue.component(Header.name,Header)
+import './lib/mui/sass/icons-extra.css'
+Vue.component(Header.name, Header)
+Vue.use(VueRouter)
+Vue.component(Swipe.name, Swipe)
+Vue.component(SwipeItem.name, SwipeItem)
+Vue.use(VueResource)
+
+
+
+
 
 
 let vm = new Vue({
-  render: h => h(App)
+  render: h => h(App),
+  router
 }).$mount('#app')
+
