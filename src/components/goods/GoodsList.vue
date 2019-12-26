@@ -1,65 +1,54 @@
 <template>
   <div class="goods-list">
-    <div class="goods-item">
+    <router-link class="goods-item" v-for="item in goodslist" 
+    :key="item.id" :to="'/home/goodsinfo/'+item.id"
+    tag="div">
       <img
-        src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1577168743992&di=96d3e1281313d55e916656dd191681ca&imgtype=0&src=http%3A%2F%2Fimg.game333.net%2Fuploads%2Fnewshouyou%2F2018%2F01%2F18%2F584_20180118113945959.png"
-        alt
+        :src="item.img_url"
       />
-      <h1 class="title">小米手机 16G双网通版</h1>
+      <h1 class="title">{{item.title}}</h1>
       <div class="info">
         <p class="price">
-          <span class="now">¥2199</span>
-          <span class="old">¥2399</span>
+          <span class="now">¥{{item.sell_price}}</span>
+          <span class="old">¥{{item.market_price}}</span>
         </p>
         <p class="sell">
           <span>热卖中</span>
-          <span>剩60件</span>
+          <span>剩{{item.stock_quantity}}件</span>
         </p>
       </div>
-    </div>
+    </router-link>
 
-    <div class="goods-item">
-      <img
-        src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1577168743992&di=96d3e1281313d55e916656dd191681ca&imgtype=0&src=http%3A%2F%2Fimg.game333.net%2Fuploads%2Fnewshouyou%2F2018%2F01%2F18%2F584_20180118113945959.png"
-        alt
-      />
-      <h1 class="title">小米手机 16G双网通版</h1>
-      <div class="info">
-        <p class="price">
-          <span class="now">¥2199</span>
-          <span class="old">¥2399</span>
-        </p>
-        <p class="sell">
-          <span>热卖中</span>
-          <span>剩60件</span>
-        </p>
-      </div>
-    </div>
+    <mt-button type="danger" size="large" @click="getMore">加载更多</mt-button>
 
-    <div class="goods-item">
-      <img
-        src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1577168743992&di=96d3e1281313d55e916656dd191681ca&imgtype=0&src=http%3A%2F%2Fimg.game333.net%2Fuploads%2Fnewshouyou%2F2018%2F01%2F18%2F584_20180118113945959.png"
-        alt
-      />
-      <h1 class="title">小米手机 16G双网通版</h1>
-      <div class="info">
-        <p class="price">
-          <span class="now">¥2199</span>
-          <span class="old">¥2399</span>
-        </p>
-        <p class="sell">
-          <span>热卖中</span>
-          <span>剩60件</span>
-        </p>
-      </div>
-    </div>
   </div>
 </template>
 
 <script>
 export default {
   data() {
-    return {};
+    return {
+      pageindex: 1,
+      goodslist: []
+    };
+  },
+  created() {
+    this.getGoodsList();
+  },
+  methods: {
+    getGoodsList() {
+      this.$http
+        .get("api/getgoods?pageindex=" + this.pageindex)
+        .then(result => {
+          if (result.body.status === 0) {
+            this.goodslist = this.goodslist.concat(result.body.message)
+          }
+        })
+    },
+    getMore(){
+      this.pageindex++
+      this.getGoodsList()
+    }
   }
 };
 </script>

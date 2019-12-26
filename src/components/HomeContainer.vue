@@ -1,11 +1,7 @@
 <template>
   <div class="container">
     <!-- 轮播图区域 -->
-    <mt-swipe :auto="4000">
-      <mt-swipe-item v-for="(item,i) in slicePicList" :key="i">
-        <img :src="item.img" />
-      </mt-swipe-item>
-    </mt-swipe>
+    <slice-pic :slicePicList="slicePicList" :isfull="true"></slice-pic>
 
     <ul class="mui-table-view mui-grid-view mui-grid-9">
       <li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-4">
@@ -50,6 +46,7 @@
 
 <script>
 import { Toast } from "mint-ui";
+import slicePic from '../components/subcomponents/SlicePic.vue'
 
 export default {
   data() {
@@ -70,6 +67,9 @@ export default {
       });
     }
   },
+  components:{
+    slicePic
+  },
   created() {
     this.getSlicePic();
   }
@@ -78,26 +78,7 @@ export default {
 
 <style scoped lang="scss">
 .container {
-  .mint-swipe {
-    height: 200px;
 
-    .mint-swipe-item {
-      &:nth-child(1) {
-        background: lightsalmon;
-      }
-      &:nth-child(2) {
-        background: lightpink;
-      }
-      &:nth-child(3) {
-        background: lightskyblue;
-      }
-
-      img {
-        width: 100%;
-        height: 100%;
-      }
-    }
-  }
   .mui-grid-view.mui-grid-9 {
     background-color: white;
     border: none;
