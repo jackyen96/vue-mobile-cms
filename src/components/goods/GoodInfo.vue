@@ -1,9 +1,6 @@
 <template>
   <div class="container">
-    <transition
-    @before-enter="beforeEnter"
-    @enter="enter"
-    @after-enter="afterEnter">
+    <transition @before-enter="beforeEnter" @enter="enter" @after-enter="afterEnter">
       <div class="ball" v-show="ballFlag" ref="ball"></div>
     </transition>
 
@@ -28,7 +25,12 @@
           </p>
           <div>
             <p style="display:inline;">购买数量:</p>
-            <num-box class="numbox" @get-count="getSelectCount" :maxcount="goodinfo.stock_quantity"></num-box>
+            <num-box
+              class="numbox"
+              @get-count="getSelectCount"
+              :maxcount="goodinfo.stock_quantity"
+              ref="numbox"
+            ></num-box>
           </div>
           <mt-button class="buttom" size="small" type="primary">立即购买</mt-button>
           <mt-button class="buttom" size="small" type="danger" @click="addToCart">加入购物车</mt-button>
@@ -65,7 +67,7 @@ export default {
       lunbotu: [], //轮播图的数据
       goodinfo: {},
       ballFlag: false,
-      selectCount: 1    //保存用户选中的商品数量,默认是一个
+      selectCount: 1 //保存用户选中的商品数量,默认是一个
     };
   },
   created() {
@@ -98,30 +100,39 @@ export default {
     },
     addToCart() {
       this.ballFlag = !this.ballFlag;
-    },
-    beforeEnter(el){
-      el.style.transform = "translate(0,0)"
-    },
-    enter(el,done){
+      let goodsinfo = {
+        id: this.id,
+        count: this.selectCount,
+        price: this.goodinfo.price,
+        selected: true
+      };
+      this.$store.commit("addToCart", goodsinfo);
 
+      this.$refs.numbox.$refs.numbox.value = 1;
+    },
+    beforeEnter(el) {
+      el.style.transform = "translate(0,0)";
+    },
+    enter(el, done) {
       //获取小球在页面中的位置
-      const ballPosition = this.$refs.ball.getBoundingClientRect()
+      const ballPosition = this.$refs.ball.getBoundingClientRect();
       //获取徽标在页面中的位置
-      const badgePosition = document.getElementById('badge').getBoundingClientRect()
-      const xDist = badgePosition.left - ballPosition.left
-      const yDist = badgePosition.top - ballPosition.top
+      const badgePosition = document
+        .getElementById("badge")
+        .getBoundingClientRect();
+      const xDist = badgePosition.left - ballPosition.left;
+      const yDist = badgePosition.top - ballPosition.top;
 
       el.offsetWidth;
-      el.style.transform = `translate(${xDist}px, ${yDist}px)`
-      el.style.transition = 'all 0.4s cubic-bezier(0.4, -0.3, 1, 0.68)'
-      done()
+      el.style.transform = `translate(${xDist}px, ${yDist}px)`;
+      el.style.transition = "all 0.4s cubic-bezier(0.4, -0.3, 1, 0.68)";
+      done();
     },
-    afterEnter(el){
+    afterEnter(el) {
       this.ballFlag = !this.ballFlag;
     },
-    getSelectCount(count){
-      this.selectCount = count
-      
+    getSelectCount(count) {
+      this.selectCount = count;
     }
   },
   components: {
