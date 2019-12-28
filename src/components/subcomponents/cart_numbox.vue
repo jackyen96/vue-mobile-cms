@@ -28,7 +28,6 @@ export default {
       //每当文本框数据被修改的时候,立即把最新的数据通过事件调用
       this.$store.commit('updateGoodsInfo'
       ,{id:this.goodsid,count:this.$refs.numbox.value})
-      
     }
   },
   data(){

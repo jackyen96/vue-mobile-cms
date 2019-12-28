@@ -10,13 +10,13 @@ import VueResource from 'vue-resource'
 import 'mint-ui/lib/style.css'
 import './lib/mui/sass/mui.scss'
 import './lib/mui/sass/icons-extra.css'
-import { Tab, Tabs} from 'vant'
+import { Tab, Tabs } from 'vant'
 import 'mint-ui/lib/style.css'
 import Vuex from 'vuex'
 
 Vue.use(Vuex)
 Vue.use(Tab).use(Tabs)
-Vue.component(Switch.name,Switch)
+Vue.component(Switch.name, Switch)
 Vue.use(Lazyload)
 Vue.component(Header.name, Header)
 Vue.use(VueRouter)
@@ -36,15 +36,15 @@ import moment from 'moment'
 let cart = JSON.parse(localStorage.getItem('cart')) || []
 
 let store = new Vuex.Store({
-  state:{ 
+  state: {
     cart    //购物车中商品的数据
   },
-  mutations:{
-    addToCart(state, goodsinfo){
+  mutations: {
+    addToCart(state, goodsinfo) {
       let flag = false
 
       state.cart.some(item => {
-        if(item.id === goodsinfo.id){
+        if (item.id === goodsinfo.id) {
           item.count += goodsinfo.count
           flag = true
           return true
@@ -52,38 +52,47 @@ let store = new Vuex.Store({
       })
 
       //如果最终循环完毕,得到的flag还是false,则把商品数据直接push到购物车中
-      if(!flag){
+      if (!flag) {
         state.cart.push(goodsinfo)
       }
 
       //更新完cart 之后,把cart存储到本地的localstorage中去
-      localStorage.setItem('cart',JSON.stringify(state.cart))
+      localStorage.setItem('cart', JSON.stringify(state.cart))
     },
-    updateGoodsInfo(state,goodsinfo){
+    updateGoodsInfo(state, goodsinfo) {
       //修改购物车中商品的数量值
       state.cart.some(item => {
-        if(item.id == goodsinfo.id){
+        if (item.id == goodsinfo.id) {
           item.count = parseInt(goodsinfo.count)
           return true
         }
       })
       localStorage.setItem('cart', JSON.stringify(state.cart))
     },
-    removeFromCart(state,id){
+    removeFromCart(state, id) {
       state.cart.some((item, i) => {
-        if(item.id == id){
+        if (item.id == id) {
           state.cart.splice(i, 1)
           return true
         }
       })
+      localStorage.setItem('cart', JSON.stringify(state.cart))
+
+
+    },
+    updateGoodsSelected(state, id) {
+      state.cart.some(item => {
+        if(item.id == id){
+          item.selected = !item.selected
+          return true
+        }
+      })
       localStorage.setItem('cart',JSON.stringify(state.cart))
-
-
     }
   },
-  getters:{
+  getters: {
     //geters相当于计算属性,相当于filter
-    getAllCount(state){
+    getAllCount(state) {
       let c = 0
       state.cart.map(
         item => {
@@ -92,10 +101,29 @@ let store = new Vuex.Store({
       )
       return c
     },
-    getGoodsCount(state){
+    getGoodsCount(state) {
       let o = {}
       state.cart.forEach(item => {
         o[item.id] = item.count
+      })
+      return o
+    },
+    getGoodsSelected(state) {
+      let o = {}
+      state.cart.forEach(
+        item => {
+          o[item.id] = item.selected
+        }
+      )
+      return o
+    },
+    getTotal(state){
+      let o = {totalPrice:0,totalAmount:0}
+      state.cart.forEach(item => {
+        if(item.selected == true){
+          o.totalPrice += item.price * item.count
+          o.totalAmount += item.count
+        }
       })
       return o
     }
@@ -103,7 +131,7 @@ let store = new Vuex.Store({
 })
 
 //设置全局的日期格式filter
-Vue.filter('dateFormat',function(dateStr,pattern='YYYY-MM-DD HH:mm:ss'){
+Vue.filter('dateFormat', function (dateStr, pattern = 'YYYY-MM-DD HH:mm:ss') {
   return moment(dateStr).format(pattern)
 })
 

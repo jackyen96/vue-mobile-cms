@@ -5,7 +5,7 @@
         <div class="mui-card-content">
           <div class="mui-card-content-inner">
             <mt-switch @change="checkChange(item.id)"
-            v-model="item.selected"></mt-switch>
+            v-model="$store.getters.getGoodsSelected[item.id]"></mt-switch>
             <img :src="item.thumb_path" />
             <div class="info">
               <h1>{{ item.title }}</h1>
@@ -32,7 +32,13 @@
           >
           <div class="left">
             <p>总计(不含运费)</p>
-            <p>已勾选商品<span class="red">0</span>件, 总价¥<span class="red">0</span>元</p>
+            <p>已勾选商品
+              <span class="red">
+                {{$store.getters.getTotal.totalAmount}}
+              </span>件, 总价¥
+              <span class="red">
+                {{$store.getters.getTotal.totalPrice}}
+                </span>元</p>
           </div>
           <mt-button type="danger">去结算</mt-button>
           </div>
@@ -55,6 +61,7 @@ export default {
   },
   created(){
     this.getGoodsList()
+    this.getTotal()
   },
   methods: {
     getGoodsList() {
@@ -78,7 +85,9 @@ export default {
       this.$store.commit('removeFromCart',id)
     },
     checkChange(id){
-
+      //每当勾选被修改的时候,调用mutation中的方法来更新selected属性值
+      let o = {}
+      this.$store.commit('updateGoodsSelected',id)
     }
   },
   components: {

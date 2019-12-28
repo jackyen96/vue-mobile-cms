@@ -1,7 +1,12 @@
 <template>
   <div class="app-container">
     <!--  顶部header区域-->
-    <mt-header fixed title="zj的练习"></mt-header>
+    <mt-header fixed title="zj的练习">
+      <a  slot="left" @click.prevent="goBack"
+      v-show="flag">
+        <mt-button icon="back">返回</mt-button>
+      </a>
+    </mt-header>
     <!-- 中间内容区域 -->
     <transition>
       <router-view></router-view>
@@ -32,12 +37,33 @@
 </template>
 
 <script>
-export default {}
+export default {
+  data(){
+    return {
+      flag : true
+    }
+  },
+  created(){
+    this.flag = this.$route.path == '/home' ? false : true  
+  },
+  methods:{
+    goBack(){
+      this.$router.go(-1)
+    }
+  },
+  watch:{
+    '$route.path': function(newVal) {
+      if(newVal == '/home'){
+        this.flag = false
+      }else{
+        this.flag = true
+      }
+    }
+  }
+}
 </script>
 
 <style scoped lang="scss">
-
-
 .app-container {
   padding-top: 40px;
   overflow-x: hidden;

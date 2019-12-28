@@ -103,7 +103,7 @@ export default {
       let goodsinfo = {
         id: this.id,
         count: this.selectCount,
-        price: this.goodinfo.price,
+        price: this.goodinfo.sell_price,
         selected: true
       };
       this.$store.commit("addToCart", goodsinfo);
